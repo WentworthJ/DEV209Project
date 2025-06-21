@@ -1,13 +1,162 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Duo - Book Browser</title>
+     <link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <div class="logo">Dynamic Duo Books</div>
+                <ul class="nav-links">
+                    <li><a onclick="showSection('home')">Home</a></li>
+                    <li><a onclick="showSection('search')">Browse</a></li>
+                    <li><a onclick="showSection('lists')" id="listsLink" style="display: none;">My Lists</a></li>
+                    <li><a onclick="showSection('reviews')" id="reviewsLink" style="display: none;">Reviews</a></li>
+                </ul>
+                <div class="auth-buttons">
+                    <div id="authButtons">
+                        <button class="btn btn-outline" onclick="showLogin()">Login</button>
+                        <button class="btn btn-primary" onclick="showRegister()">Sign Up</button>
+                    </div>
+                    <div id="userMenu" style="display: none;">
+                        <span id="welcomeUser" class="text-muted"></span>
+                        <button class="btn btn-outline" onclick="logout()">Logout</button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Home Section -->
+        <section id="home" class="section active">
+            <div class="hero">
+                <div class="container">
+                    <h1>Discover Your Next Great Read</h1>
+                    <p>Browse thousands of books, read reviews, and build your personal reading lists</p>
+                    <button class="btn btn-primary" onclick="showSection('search')">Start Browsing</button>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="search-container">
+                    <h2>Featured Books</h2>
+                    <div id="featuredBooks" class="books-grid">
+                        <!-- Featured books will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Search Section -->
+        <section id="search" class="section">
+            <div class="container">
+                <div class="search-container">
+                    <h2>Browse Books</h2>
+                    <div class="search-box">
+                        <input type="text" id="searchInput" class="search-input" placeholder="Search for books, authors, or subjects...">
+                        <button class="btn btn-primary" onclick="searchBooks()">Search</button>
+                    </div>
+                </div>
+
+                <div id="searchResults" class="books-grid">
+                    <!-- Search results will appear here -->
+                </div>
+
+                <div id="searchLoading" class="loading" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Searching for books...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- My Lists Section -->
+        <section id="lists" class="section">
+            <div class="container">
+                <div class="list-section">
+                    <h2>To Read List</h2>
+                    <div id="toReadList">
+                        <!-- To read books will appear here -->
+                    </div>
+                </div>
+
+                <div class="list-section">
+                    <h2>Read Books</h2>
+                    <div id="readList">
+                        <!-- Read books will appear here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Reviews Section -->
+        <section id="reviews" class="section">
+            <div class="container">
+                <div class="reviews-section">
+                    <h2>All Reviews</h2>
+                    <div id="allReviews">
+                        <!-- All reviews will appear here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Auth Modal -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div id="authContent">
+                <!-- Auth forms will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Book Details Modal -->
+    <div id="bookModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div id="bookContent">
+                <!-- Book details will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Review Modal -->
+    <div id="reviewModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div id="reviewContent">
+                <h3>Write a Review</h3>
+                <form id="reviewForm">
+                    <div class="form-group">
+                        <label for="reviewRating">Rating</label>
+                        <select id="reviewRating" required>
+                            <option value="">Select rating</option>
+                            <option value="1">1 Star</option>
+                            <option value="2">2 Stars</option>
+                            <option value="3">3 Stars</option>
+                            <option value="4">4 Stars</option>
+                            <option value="5">5 Stars</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="reviewText">Review</label>
+                        <textarea id="reviewText" placeholder="Write your review..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Review</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+     <!-- Link to JavaScript file -->
+  <script src="script.js"></script>
+</body>
 </html>

@@ -12,7 +12,7 @@ import Navbar from './components/Navbar';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#1976d2',
+      main: '#1976d2', //This is the navagation bar color
     },
     secondary: {
       main: '#dc004e',
