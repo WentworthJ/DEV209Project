@@ -86,6 +86,7 @@ const featuredBooks = [
 function init() {
   loadFeaturedBooks()
   checkAuth()
+  loadAllReviews() // Load reviews on initialization
 
   // Add enter key support for search
   document
@@ -111,7 +112,7 @@ function showSection(sectionName) {
   if (sectionName === 'lists' && currentUser) {
     loadUserLists()
   } else if (sectionName === 'reviews') {
-    loadAllReviews()
+    loadAllReviews() // Always load reviews regardless of user status
   }
 }
 
@@ -234,6 +235,33 @@ function showBookDetails(book) {
     ? `<img src="${book.cover}" alt="${book.title}" style="width: 200px; height: auto; border-radius: 10px; margin-bottom: 1rem;">`
     : `<div style="width: 200px; height: 300px; background: var(--gradient); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; text-align: center; margin-bottom: 1rem;">${book.title}</div>`
 
+  // Get reviews for this book
+  const bookReviews = reviews.filter(r => r.bookKey === book.key)
+  let reviewsSection = ''
+  
+  if (bookReviews.length > 0) {
+    reviewsSection = `
+      <div style="margin-top: 2rem; text-align: left;">
+        <h3>Reviews (${bookReviews.length})</h3>
+        <div style="max-height: 300px; overflow-y: auto;">
+          ${bookReviews.map(review => {
+            const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating)
+            return `
+              <div style="border: 1px solid #ddd; padding: 1rem; margin-bottom: 1rem; border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                  <strong>${review.userName}</strong>
+                  <span style="color: #ffd700;">${stars}</span>
+                </div>
+                <p style="margin: 0; color: #666; font-size: 0.9rem;">${review.text}</p>
+                <small style="color: #999;">${new Date(review.date).toLocaleDateString()}</small>
+              </div>
+            `
+          }).join('')}
+        </div>
+      </div>
+    `
+  }
+
   content.innerHTML = `
                 <div style="text-align: center;">
                     ${coverContent}
@@ -241,6 +269,7 @@ function showBookDetails(book) {
                     <p><strong>Author:</strong> ${book.author}</p>
                     ${book.first_publish_year ? `<p><strong>First Published:</strong> ${book.first_publish_year}</p>` : ''}
                     ${book.subject && book.subject.length > 0 ? `<p><strong>Subjects:</strong> ${book.subject.slice(0, 3).join(', ')}</p>` : ''}
+                    ${reviewsSection}
                 </div>
             `
 
@@ -249,6 +278,10 @@ function showBookDetails(book) {
 
 // Authentication functions
 function checkAuth() {
+  // Load all reviews on app start (public data)
+  const storedReviews = JSON.parse(localStorage.getItem('allReviews') || '[]')
+  reviews = storedReviews
+
   // Simulate checking for stored auth (in a real app, this would check Firebase Auth)
   const storedUser = localStorage.getItem('currentUser')
   if (storedUser) {
@@ -355,9 +388,7 @@ function logout() {
   currentUser = null
   localStorage.removeItem('currentUser')
   localStorage.removeItem('userLists')
-  localStorage.removeItem('userReviews')
   userLists = { toRead: [], read: [] }
-  reviews = []
   updateAuthUI()
   showSection('home')
   showMessage('Logged out successfully!', 'success')
@@ -370,6 +401,9 @@ function updateAuthUI() {
   const listsLink = document.getElementById('listsLink')
   const reviewsLink = document.getElementById('reviewsLink')
 
+  // Reviews are now always visible
+  reviewsLink.style.display = 'block'
+
   if (currentUser) {
     authButtons.style.display = 'none'
     userMenu.style.display = 'flex'
@@ -377,12 +411,10 @@ function updateAuthUI() {
     userMenu.style.gap = '1rem'
     welcomeUser.textContent = `Welcome, ${currentUser.name}!`
     listsLink.style.display = 'block'
-    reviewsLink.style.display = 'block'
   } else {
     authButtons.style.display = 'flex'
     userMenu.style.display = 'none'
     listsLink.style.display = 'none'
-    reviewsLink.style.display = 'none'
   }
 
   // Refresh current section if it's lists or search
@@ -405,19 +437,17 @@ function loadUserData() {
   if (storedLists) {
     userLists = JSON.parse(storedLists)
   }
-
-  // Load user reviews
-  const storedReviews = localStorage.getItem('userReviews')
-  if (storedReviews) {
-    reviews = JSON.parse(storedReviews)
-  }
 }
 
 function saveUserData() {
   if (!currentUser) return
 
   localStorage.setItem('userLists', JSON.stringify(userLists))
-  localStorage.setItem('userReviews', JSON.stringify(reviews))
+}
+
+function saveAllReviews() {
+  // Save all reviews to public storage
+  localStorage.setItem('allReviews', JSON.stringify(reviews))
 }
 
 // List management
@@ -514,28 +544,6 @@ function loadUserLists() {
       toReadContainer.appendChild(listItem)
     })
   }
-
-
-const firebaseConfig = {
-
-  apiKey: "AIzaSyA9QfneKGuh3yYJR5xyqkTZKVw5pLoQ4xA",
-
-  authDomain: "dev209-example-e2ef7.firebaseapp.com",
-
-  projectId: "dev209-example-e2ef7",
-
-  storageBucket: "dev209-example-e2ef7.firebasestorage.app",
-
-  messagingSenderId: "303570355606",
-
-  appId: "1:303570355606:web:67ead09d726fa2b0acc9b7",
-
-  measurementId: "G-T9QKT42EYX"
-
-};
-
-
-
 
   // Load Read list
   if (userLists.read.length === 0) {
@@ -677,7 +685,7 @@ function submitReview(event) {
     showMessage('Review submitted successfully!', 'success')
   }
 
-  saveUserData()
+  saveAllReviews() // Save to public storage
   closeModal()
 
   // Refresh reviews if on reviews page
