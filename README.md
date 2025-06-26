@@ -1,10 +1,33 @@
-# React + Vite
+# ReadMe
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Project setup instructions
+Create your own firebase project, and use the code it generates for you to replace "const firebaseConfig" in the firebase.js file
 
-Currently, two official plugins are available:
+# Features
+A site where users can browse a wide variety of books and use the search function to find specific books.
+When the user is logged in, they can:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-# DEV209Example
-# DEV209Example
+Add books to a ToRead list.
+Mark list items as 'Read'.
+Leave reviews on 'Read' Items that can be read, deleted, or edited later.
+
+# Technology and Recources Used
+APIs used:
+Firebase:
+https://console.firebase.google.
+
+OpenLibrary: 
+https://openlibrary.org/developers/api
+
+
+
+Project is hosted on Netlify 
+https://playful-peony-44ff4b.netlify.app/
+
+GitHub Repository:
+https://github.com/WentworthJ/DEV209Project
+
+
+Known limitations or bugs
+The Netlify version is not currently using the css code.
+Reviews are only visible to the user that created them.
