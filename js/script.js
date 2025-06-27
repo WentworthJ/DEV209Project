@@ -797,3 +797,4 @@ document.addEventListener('click', function (event) {
 
 // Initialize the application when the page loads
 document.addEventListener('DOMContentLoaded', init)
+
