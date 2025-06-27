@@ -9,7 +9,7 @@ When the user is logged in, they can:
 
 Add books to a ToRead list.
 Mark list items as 'Read'.
-Leave reviews on 'Read' Items that can be read, deleted, or edited later.
+Leave reviews on 'Read' Items that can be read by others, deleted, or edited later.
 
 # Technology and Recources Used
 APIs used:
@@ -29,5 +29,4 @@ https://github.com/WentworthJ/DEV209Project
 
 
 Known limitations or bugs
-The Netlify version is not currently using the css code.
-Reviews are only visible to the user that created them.
+The information is saved, but the site returns to the home page on refresh.
